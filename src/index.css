@@ -93,7 +93,7 @@ h1{
 }
 .card {
 	width: 170px;
-	height: 40px;
+	min-height: 40px;
 	border-radius: 5px;
 	margin: 2px auto 0;
 	background: white;
@@ -112,7 +112,18 @@ h1{
 .add-card-container{
 	margin: 10px auto 0;
 }
-
+.card-delete-button {
+	float: right;
+	height: 15px;
+	width: 15px;
+	border-radius: 50%;
+	background: rgb(229, 121, 121);
+	margin: 10px 7px 0 0;
+	z-index: 10;
+}
+.card-delete-button:hover {
+	background: rgb(216, 73, 73);
+}
 .cardDetails {
 	margin: 50px auto 0;
 	width: 600px;
@@ -148,9 +159,13 @@ h1{
 	width: 15px;
 	height: 15px;
 	border-radius: 50%;
-	background: red;
+	background: rgb(229, 121, 121);
 	cursor: pointer;
 	z-index: 10;
+}
+
+.exit-button:hover {
+	background: rgb(216, 73, 73);
 }
 
 .comment h1{

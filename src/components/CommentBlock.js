@@ -32,6 +32,7 @@ class CommentBlock extends React.Component {
     this.editComment = this.editComment.bind(this);
     this.saveComment = this.saveComment.bind(this);
     this.renderCommentList = this.renderCommentList.bind(this);
+    this.setState = this.setState.bind(this);
   }
 
   handleChangeEvent(e) {
@@ -40,7 +41,10 @@ class CommentBlock extends React.Component {
   }
 
   handleCommentTitle(e) {
-    (e.target.value) ? this.setState({commentButton: true}) : this.setState({commentButton: false});
+    console.log(e.target.value);
+    console.log(this.state.commentButton);
+    (e.target.value === '') ? this.setState({commentButton: true}) : this.setState({commentButton: false});
+    console.log(this.state.commentButton);
     this.setState({commentTitle: e.target.value});
   }
 
@@ -84,7 +88,7 @@ class CommentBlock extends React.Component {
 
   renderCommentList() {
     const {cardId} = this.props;
-    const {commentData, username, commentTitle, buttonActive} = this.state;
+    const {commentData, username, commentTitle, commentButton} = this.state;
     var remove, edit, handleEvent, save;
     remove = this.remove;
     edit = this.editComment;
@@ -112,10 +116,12 @@ class CommentBlock extends React.Component {
                     <br/>
                     <button
                       className="btn btn-info btn-edit-comment"
-                      disabled={!buttonActive}
+                      disabled={commentButton}
                       onClick={() => {return save(i)}}>Save</button>
                   </li>);
         }
+      }else{
+        return null;
       }
     });
   }
@@ -125,7 +131,7 @@ class CommentBlock extends React.Component {
       <div className="comment">
         <h1>Add Comment</h1>
         <textarea
-          placeholder="Напишите комментарий..."
+          placeholder="Write your comment..."
           value={this.state.commentName}
           onChange={this.handleChangeEvent}
           className="textarea add-comment">
@@ -134,8 +140,7 @@ class CommentBlock extends React.Component {
         <button
           disabled={!this.state.buttonIsActive}
           onClick={this.save}
-          className="btn btn-success add-comment-btn">Save
-        </button>
+          className="btn btn-success add-comment-btn">Save</button>
         <ul className="comment-list">
           {this.renderCommentList()}
         </ul>

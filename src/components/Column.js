@@ -28,6 +28,7 @@ class Column extends React.Component{
     this.editColumnTitle = this.editColumnTitle.bind(this);
     this.renderEdit = this.renderEdit.bind(this);
     this.renderRegular = this.renderRegular.bind(this);
+    this.updateCard = this.updateCard.bind(this);
   }
 
   handleChangeEvent(e) {
@@ -43,11 +44,13 @@ class Column extends React.Component{
   }
 
   save() {
-    var newArr, columnId, arr;
+    var newArr, columnId, arr, id;
     columnId = this.props.columnId;
-    arr = this.state.cardData || [];
+    arr = getData('card') || [];
+    id = (arr.length > 0) ? (arr[arr.length - 1].id + 1) : 1;
+    console.log(arr);
       if(this.state.cardName.trim() !== ""){
-        newArr = arr.concat({id: arr.length+1, columnId: columnId, name: this.state.cardName.trim(), description: ''});
+        newArr = arr.concat({id: id, columnId: columnId, name: this.state.cardName.trim(), description: ''});
         setData('card', newArr);
         this.setState({cardData: getData('card'), isEditCard: false, cardName: ''});
       }else{
@@ -82,13 +85,25 @@ class Column extends React.Component{
     );
   }
 
+  updateCard(cardFn, cardId){
+    cardFn(cardId);
+    this.setState({cardData: getData('card')});
+  }
+
   render() {
     return (
       <div className="column">
         <h1>{this.props.columnName}</h1>
         {
           (!this.state.cardData) ? null : this.state.cardData.map((e, i) => {
-            return (e.columnId === this.props.columnId) ? <Card cardName={e.name} key={i} cardId={e.id} columnName={this.props.columnName}/> : null;
+            return (e.columnId === this.props.columnId) ?
+            <Card
+              cardName={e.name}
+              index={i} key={i}
+              cardId={e.id}
+              columnName={this.props.columnName}
+              updateCard={this.updateCard}/> :
+            null;
           })
         }
         <div>
