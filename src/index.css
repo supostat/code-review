@@ -1,0 +1,215 @@
+/*------------------------
+	main screen styles
+------------------------*/
+body {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-size: 12px;
+}
+
+h1{
+	font-size: 12px;
+}
+
+/*------------------------
+		popup styles
+------------------------*/
+
+.popup-lock {
+	overflow:hidden;
+}
+
+.popup-shim {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	overflow: auto;
+	background: rgba(0, 0, 0, .3);
+}
+
+.popup {
+	margin: 0 auto;
+	display: inline-block;
+	background: white;
+}
+
+/*------------------------
+		common styles
+------------------------*/
+
+.name-form {
+	margin: 50px auto 0;
+	width: 300px;
+	height: 150px;
+	padding: 10px;
+	border: solid 1px black;
+	background: white;
+	border: 5px;
+}
+
+.name-form p {
+	margin: 14px auto;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.input-name-field {
+	margin: 0 0 10px 14px;
+	width: 250px;
+	height: 30px;
+}
+.name-submit-button {
+	margin: 3px 0 0 169px;
+}
+
+.board {
+	width: 250px;
+	height: 95px;
+	margin: 15px 0 0 0;
+	display: block;
+	background: #005B8F;
+	border: solid 1px black;
+	cursor: pointer;
+}
+.board h1 {
+	font-size: 16px !important;
+	font-weight: bold !important;
+	margin: 10px 0 0 10px;
+	color: white;
+}
+.column {
+	float: right;
+	width: 235px;
+	margin: 10px 2px;
+	cursor: pointer;
+	background: rgba(193, 229, 114, .5);
+}
+.column h1 {
+	margin: 10px 0 0 10px;
+	font-size: 18px !important;
+}
+.card {
+	width: 170px;
+	height: 40px;
+	border-radius: 5px;
+	margin: 2px auto 0;
+	background: white;
+	cursor: pointer;
+}
+.card h1{
+	padding: 10px 0 0 6px;
+}
+.add-card {
+	margin: 12px 0 15px 45px !important;
+}
+.add-card-area {
+	margin: 20px 0 0 27px;
+}
+
+.add-card-container{
+	margin: 10px auto 0;
+}
+
+.cardDetails {
+	margin: 50px auto 0;
+	width: 600px;
+	min-height: 600px;
+	background: #EDEFF0;
+}
+
+.cardDetails h1{
+	font-size: 30px !important;
+	margin-left: 20px;
+	padding-top: 8px;
+}
+
+.cardDetails h2{
+	font-size: 20px;
+	margin-top: 5px;
+	margin-left: 20px;
+}
+
+.cardDetails p{
+	font-size: 16px;
+	margin-top: 20px;
+	margin-left: 20px;
+}
+
+.comment-list {
+	list-style-type: none;
+}
+
+.exit-button {
+	margin: 10px 10px 0 0;
+	float: right;
+	width: 15px;
+	height: 15px;
+	border-radius: 50%;
+	background: red;
+	cursor: pointer;
+	z-index: 10;
+}
+
+.comment h1{
+	font-size: 16px !important;
+	font-weight: bold !important;
+	margin: 25px 0 10px 20px;
+}
+
+.add-comment {
+	width: 425px;
+	height: 85px;
+	margin-left: 20px;
+}
+
+.add-comment-btn {
+	margin: 3px 0 0 19px;
+}
+.comment-list{
+	margin: 0;
+	padding: 0;
+	margin-top: 20px;
+	padding-bottom: 10px;
+}
+.comment-item {
+	margin: 0 0 0 20px;
+	min-height: 80px;
+	width: 350px;
+}
+.comment-item:last-child{
+	margin-bottom: 10px;
+}
+.comment-item h1{
+	margin: 3px 0 0 10px;
+	padding:0;
+	padding-top: 9px;
+	font-size: 18px !important;
+}
+.comment-item p{
+	display: inline-block;
+	margin: 4px 0 2px 18px;
+	padding: 6px;
+	border-radius: 5px;
+	background: white;
+}
+.comment-action {
+	margin: 5px 0 0 100px;
+}
+.comment-item a {
+	display: inline-block;
+	margin: 0 0 0 10px;
+	font-size: 12px;
+	color: #898A8A;
+}
+
+.edit-comment{
+	width: 425px;
+	height: 85px;
+	margin-left: 20px;
+}
+.btn-edit-comment{
+	margin: 5px 0 0 20px;
+}
