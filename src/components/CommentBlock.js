@@ -22,6 +22,7 @@ class CommentBlock extends React.Component {
       commentName: '',
       buttonIsActive: false,
       commentButton: true,
+      commentEditButton: false,
       commentTitle: ''
     }
   }
@@ -32,25 +33,25 @@ class CommentBlock extends React.Component {
   }
 
   handleCommentTitle = (e) => {
-    (e.target.value === '') ? this.setState({commentButton: true}) : this.setState({commentButton: false});
+    (e.target.value === '') ? this.setState({commentEditButton: true}) : this.setState({commentEditButton: false});
     this.setState({commentTitle: e.target.value});
   }
 
   edit = (index) => {
     var arr = this.state.commentData;
-    arr[index].description = this.state.commentContent;
+    arr[index].description = this.state.commentContent.trim();
     setData('comment', arr);
     this.setState({commentData: getData('comment')});
   }
 
-  save = () =>{
+  save = () => {
     var username, commentName, arr, newArr;
         username = this.state.username;
         commentName = this.state.commentName;
         arr = this.state.commentData || [];
         newArr = arr.concat({id: arr.length+1, cardId: this.props.cardId, author: username, description: commentName, editMode: false});
     setData('comment', newArr);
-    this.setState({commentData: getData('comment'), commentName: ''});
+    this.setState({commentData: getData('comment'), commentName: '', buttonIsActive: !this.state.buttonIsActive});
   }
 
   remove = (index) => {
@@ -72,11 +73,12 @@ class CommentBlock extends React.Component {
     arr[index].editMode = false;
     setData('comment', arr);
     this.setState({commentData: getData('comment'), commentTitle: ''});
+    document.getElementById('popupShim').focus();
   }
 
   renderCommentList = () => {
     const {cardId} = this.props;
-    const {commentData, username, commentTitle, commentButton} = this.state;
+    const {commentData, username, commentTitle, commentEditButton} = this.state;
     var remove, edit, handleEvent, save;
     remove = this.remove;
     edit = this.editComment;
@@ -104,7 +106,7 @@ class CommentBlock extends React.Component {
                     <br/>
                     <button
                       className="btn btn-info btn-edit-comment"
-                      disabled={commentButton}
+                      disabled={commentEditButton}
                       onClick={() => {return save(i)}}>Save</button>
                   </li>);
         }

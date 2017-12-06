@@ -151,6 +151,7 @@ class Column extends React.Component{
               cardName={e.name}
               index={i} key={i}
               cardId={e.id}
+              cardDescription={e.description}
               columnName={this.props.columnName}
               updateCard={this.updateCard}/> :
             null;

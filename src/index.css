@@ -62,7 +62,7 @@ h1{
 	height: 30px;
 }
 .name-submit-button {
-	margin: 3px 0 0 169px;
+	margin: 3px 0 0 205px;
 }
 
 /*------------------------------
@@ -87,7 +87,7 @@ h1{
 		styles for column
 ------------------------------*/
 .column {
-	float: right;
+	float: left;
 	width: 235px;
 	margin: 10px 2px;
 	cursor: pointer;
@@ -159,18 +159,19 @@ h1{
 }
 
 .cardDetails h2{
-	font-size: 20px;
+	font-size: 18px;
 	margin-top: 5px;
 	margin-left: 20px;
 }
 
 .cardDetails p{
 	font-size: 16px;
-	margin-top: 20px;
+	margin-top: 5px;
 	margin-left: 20px;
 }
 
 #normal-card-title {
+	min-height: 27px;
 	font-size: 24px !important;
 	font-weight: bold;
 }
@@ -186,6 +187,40 @@ h1{
 .exit-button:hover {
 	background: rgb(216, 73, 73);
 }
+
+#card-description-link{
+	margin: 0 0 0 30px;
+	text-decoration: underline;
+	color: #898A8A;
+	font-size: 14px;
+}
+
+#card-description-container {
+	margin: 30px 0 0 0;
+	width: 445px;
+	height: 140px;
+}
+
+#card-description-container textarea{
+	width: 425px;
+	height: 100px;
+	margin: 0 0 0 20px;
+}
+#card-description-container button{
+	margin: 0 0 0 20px;
+}
+#card-description-container div {
+	margin: 8px 335px 0 0;
+}
+.card-regular-description-container {
+	width: 445px;
+	margin: 25px 0 0 0;
+}
+.card-regular-description{
+	padding: 0 0 0 0;
+	width: 400px;
+}
+
 
 /*------------------------------
 		styles for comment

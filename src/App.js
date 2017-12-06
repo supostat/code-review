@@ -31,11 +31,13 @@ class App extends React.Component {
       username: getUsername(),
       columnData: getData('column'),
       cardData: getData('card'),
-      columnTitleIsEdit: false
+      columnTitleIsEdit: false,
+      buttonIsActive: false
     }
   }
 
   handleChangeEvent = (e) => {
+    (e.target.value) ? this.setState({buttonIsActive: true}) : this.setState({buttonIsActive: false});
     this.setState({username: e.target.value});
   }
 
@@ -71,7 +73,7 @@ class App extends React.Component {
           <form className="name-form" onSubmit={(e) => {e.preventDefault()}}>
             <p>Please input your username:</p> <input className="input-name-field" type="text" onChange={this.handleChangeEvent} />
             <br/>
-            <input type="submit" value="Сохранить" onClick={this.add} className="btn btn-info name-submit-button" />
+            <input type="submit" value="Save" onClick={this.add} disabled={!this.state.buttonIsActive} className="btn btn-info name-submit-button" />
             </form>
           </div>
         );

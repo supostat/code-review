@@ -18,7 +18,8 @@ class Card extends React.Component {
       isEditCardTitle: false,
       isEditCardDescription: false,
       cardData: getData('card'),
-      cardName: ''
+      cardName: '',
+      description: ''
     }
   }
 
@@ -28,6 +29,11 @@ class Card extends React.Component {
 
   closeCardDetailsByKey = (e) => {
     var inputCardTitle = document.getElementById('input-card-title');
+    var inputCardDescription = document.getElementById('input-card-description');
+    if(inputCardDescription === document.activeElement){
+      if(e.keyCode === 27 || e.keyCode === 13)
+        return this.props.updateCard(this.setCardDescription, this.props.cardId);
+    }
     if(!inputCardTitle && e.keyCode === 27){
       this.setState({isOpen: false});
     }else if(inputCardTitle && (e.keyCode === 27 || e.keyCode === 13)){
@@ -42,13 +48,27 @@ class Card extends React.Component {
   }
 
   componentDidUpdate = () => {
+    var inputCardDescription = document.getElementById('input-card-description');
     var inputCardTitle = document.getElementById('input-card-title');
     var focusContainer = document.getElementById('popupShim');
-    if(!inputCardTitle && focusContainer) focusContainer.focus();
+    if(inputCardDescription === document.activeElement){
+      return inputCardDescription.focus();
+    }
+    if(!inputCardTitle && focusContainer){
+      focusContainer.focus();
+    }
   }
 
   setEditCardTitle = () => {
     this.setState({isEditCardTitle: true, cardName: this.props.cardName});
+  }
+
+  setEditCardDescription = () => {
+    this.setState({isEditCardDescription: true, description: this.props.cardDescription});
+  }
+
+  setRegularCardDescription = () => {
+    this.setState({isEditCardDescription: false});
   }
 
   setCardTitle = () => {
@@ -57,7 +77,7 @@ class Card extends React.Component {
     arr = getData('card');
     newArr = arr.map((e, i) => {
       if(e.id === cardId){
-        e.name = this.state.cardName;
+        e.name = this.state.cardName.trim();
         return e;
       }else{
         return e;
@@ -67,12 +87,31 @@ class Card extends React.Component {
     this.setState({isEditCardTitle: false});
   }
 
+  setCardDescription = () => {
+    var arr, newArr, cardId;
+    cardId = this.props.cardId;
+    arr = getData('card');
+    newArr = arr.map((e, i) => {
+      if(e.id === cardId){
+        e.description = this.state.description.trim();
+        return e;
+      }else{
+        return e;
+      }
+    });
+    setData('card', newArr);
+    this.setState({isEditCardDescription: false});
+  }
+
   handleChangeEvent = (e) => {
     this.setState({cardName: e.target.value});
   }
 
+  handleChangeDescription = (e) => {
+    this.setState({description: e.target.value});
+  }
+
   setSelectionInEnd = (e) => {
-    console.log('Selection function is invoked');
     e.target.setSelectionRange(e.target.value.length, e.target.value.length);
   }
 
@@ -99,11 +138,25 @@ class Card extends React.Component {
   renderCardDescription = () => {
     if(this.state.isEditCardDescription){
       return (
-        <div>TODO</div>
+        <div id="card-description-container">
+          <textarea id="input-card-description" autoFocus="true" placeholder="Add more detail description..."
+            onChange={this.handleChangeDescription}
+            value={this.state.description}></textarea>
+          <button className="btn btn-primary"
+            onClick={() => {return this.props.updateCard(this.setCardDescription, this.props.cardId)}}>Save</button>
+          <div className="exit-button"
+               id="exit-button-description"
+            onClick={this.setRegularCardDescription}></div>
+        </div>
       );
     }else{
       return(
-        <div>TODO</div>
+        <div className="card-regular-description-container">
+          <a href="#"
+            id="card-description-link"
+            onClick={this.setEditCardDescription}>Change description...</a>
+          <p className="card-regular-description">{this.props.cardDescription}</p>
+        </div>
       );
     }
   }
@@ -119,7 +172,7 @@ class Card extends React.Component {
               <div onClick={this.closeCardDetails}
                 className="exit-button"></div>
               {this.renderCardTitle()}
-              <h2>In column {this.props.columnName}</h2>
+              <h2>In column "{this.props.columnName}"</h2>
               {this.renderCardDescription()}
               <CommentBlock cardId={this.props.cardId} cardName={this.props.cardName}/>
           </div>
