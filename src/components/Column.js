@@ -21,34 +21,55 @@ class Column extends React.Component{
       cardName: '',
       columnName: ''
     }
-    this.handleChangeEvent  = this.handleChangeEvent.bind(this);
-    this.handleColumnTitle  = this.handleColumnTitle.bind(this);
-    this.edit = this.edit.bind(this);
-    this.save = this.save.bind(this);
-    this.editColumnTitle = this.editColumnTitle.bind(this);
-    this.renderEdit = this.renderEdit.bind(this);
-    this.renderRegular = this.renderRegular.bind(this);
-    this.updateCard = this.updateCard.bind(this);
   }
 
-  handleChangeEvent(e) {
+  handleChangeEvent = (e) => {
     this.setState({cardName: e.target.value});
   }
 
-  handleColumnTitle(e) {
+  handleColumnTitle = (e) => {
     this.setState({columnName: e.target.value});
   }
 
-  edit() {
+  switchToEditColumnTitle = (name) => {
+    this.setState({isEditTitle: true, columnName: name});
+  }
+
+  handleKeyPress = (event) => {
+    if(event.keyCode === 27 || event.keyCode === 13){
+      this.setColumnTitle();
+    }
+  }
+
+  handleClickColumnTitle = (event) => {
+      this.setColumnTitle();
+  }
+
+  setColumnTitle = () => {
+    var columnName, arr, newArr;
+    columnName = (this.state.columnName === '') ? "" : this.state.columnName;
+    arr = getData('column');
+      newArr = arr.map((e, i) => {
+        if(this.props.index === i){
+          e.name = columnName;
+          return e;
+        }else{
+          return e;
+        }
+      });
+      setData('column', newArr);
+      this.setState({isEditTitle: false, columnData: getData('column')});
+  }
+
+  edit = () => {
     this.setState({isEditCard: true});
   }
 
-  save() {
+  save = () => {
     var newArr, columnId, arr, id;
     columnId = this.props.columnId;
     arr = getData('card') || [];
     id = (arr.length > 0) ? (arr[arr.length - 1].id + 1) : 1;
-    console.log(arr);
       if(this.state.cardName.trim() !== ""){
         newArr = arr.concat({id: id, columnId: columnId, name: this.state.cardName.trim(), description: ''});
         setData('card', newArr);
@@ -58,13 +79,13 @@ class Column extends React.Component{
       }
     }
 
-  editColumnTitle(index) {
-    var arr = this.state.columnData;
+  editColumnTitle = (index) => {
+    var arr = getData('column');
     arr[index].editMode = true;
     this.setState({columnData: getData('column')});
   }
 
-  renderEdit() {
+  renderEdit = () => {
     return (
       <div className="add-card-contaner">
         <textarea
@@ -74,26 +95,55 @@ class Column extends React.Component{
         </textarea>
         <button
           className="btn btn-success add-card"
-          onClick={this.save}>Добавить карточку</button>
+          onClick={this.save}>Add Card</button>
       </div>
     );
   }
 
-  renderRegular() {
+  renderRegular = () => {
     return (
-      <a href="#" onClick={this.edit} className="btn btn-success add-card">Добавить карточку</a>
+      <a href="#" onClick={this.edit} className="btn btn-success add-card">Add Card</a>
     );
   }
 
-  updateCard(cardFn, cardId){
+  updateCard = (cardFn, cardId) => {
     cardFn(cardId);
     this.setState({cardData: getData('card')});
+  }
+
+  setSelectionInEnd = (e) => {
+    e.target.setSelectionRange(e.target.value.length, e.target.value.length);
+  }
+
+  renderTitle = () => {
+    if(!this.state.isEditTitle){
+      return (
+        <h1 className="column-title" onClick={() => {this.switchToEditColumnTitle(this.props.columnName)}}>{this.props.columnName}</h1>
+      );
+    }else{
+      return(
+        <input type="text"
+              ref="inputColumnTitle"
+              className="input-column-title input"
+              autoFocus="true"
+              value={this.state.columnName}
+              onKeyDown={(e) => {this.props.updateColumnTitle(this.handleKeyPress, e)}}
+              onFocus={this.setSelectionInEnd.bind(this)}
+              onBlur={(e) =>{this.props.updateColumnTitle(this.handleClickColumnTitle, e)}}
+              onChange={this.handleColumnTitle}/>
+      );
+    }
   }
 
   render() {
     return (
       <div className="column">
-        <h1>{this.props.columnName}</h1>
+        <div className="column-title-container">
+        {
+          this.renderTitle()
+        }
+        </div>
+        <div className="card-container">
         {
           (!this.state.cardData) ? null : this.state.cardData.map((e, i) => {
             return (e.columnId === this.props.columnId) ?
@@ -106,6 +156,7 @@ class Column extends React.Component{
             null;
           })
         }
+        </div>
         <div>
           {(this.state.isEditCard) ? this.renderEdit() : this.renderRegular()}
         </div>

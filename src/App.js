@@ -33,22 +33,25 @@ class App extends React.Component {
       cardData: getData('card'),
       columnTitleIsEdit: false
     }
-    this.handleChangeEvent = this.handleChangeEvent.bind(this);
-    this.add = this.add.bind(this);
   }
 
-  handleChangeEvent(e) {
+  handleChangeEvent = (e) => {
     console.log("Set State function");
     this.setState({username: e.target.value});
   }
 
-  add() {
+  add = () => {
     setData('username', this.state.username);
     setDefaultDashboardAndColumn();
     this.setState({username: getUsername(), columnData: getData('column')});
   }
 
-  requestUsername() {
+  updateColumnTitle = (callBack, e) => {
+    callBack(e);
+    this.setState({columnData: getData('column')});
+  }
+
+  requestUsername = () => {
     var columnData = this.state.columnData;
     if (columnData) {
       return (
@@ -58,7 +61,7 @@ class App extends React.Component {
           </div>
           <div className="second-screen col-xs-9 col-sm-9 col-md-9 col-lg-9">
             {columnData.map((e, i) => {
-              return (<Column columnName={e.name} key={i} columnId={e.id} index={i} />);
+              return (<Column columnName={e.name} key={i} columnId={e.id} index={i} updateColumnTitle={this.updateColumnTitle}/>);
             })}
           </div>
         </div>

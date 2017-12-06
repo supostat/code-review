@@ -1,5 +1,6 @@
 import React from 'react';
 import CommentBlock from './CommentBlock';
+import ReactDOM from 'react-dom'
 
   const getData = (dataName) =>
     JSON.parse(localStorage.getItem(dataName));
@@ -17,38 +18,52 @@ class Card extends React.Component {
       isOpen: false,
       cardData: getData('card')
     }
-    this.closeCardDetails = this.closeCardDetails.bind(this);
-    this.openCardDetails = this.openCardDetails.bind(this);
-    this.renderCardDetails = this.renderCardDetails.bind(this);
-    this.renderCard = this.renderCard.bind(this);
-    this.removeCard = this.removeCard.bind(this);
+    this.refs = {
+      focusedElement: null
+    }
   }
 
-  closeCardDetails() {
+  closeCardDetails = () => {
     this.setState({isOpen: false});
   }
 
-  openCardDetails(event) {
+  closeCardDetailsByKey = (e) => {
+    console.log("Close By Key is invoked");
+    if(e.keyCode === 27)
+      this.setState({isOpen: false});
+  }
+
+  openCardDetails = (event) => {
     if(!((event.target).getAttribute('class') === "card-delete-button")){
       this.setState({isOpen: true});
     }
   }
 
-  renderCardDetails() {
+  focus = () => {
+    this.focusedElement.focus();
+  }
+
+  renderCardDetails = () => {
       return (
-        <div className="popup-shim">
-          <div className="cardDetails">
-            <div onClick={this.closeCardDetails} className="exit-button"></div>
-            <h1>{this.props.cardName}</h1>
-            <h2>In column {this.props.columnName}</h2>
-            <p>Description TODO</p>
-            <CommentBlock cardId={this.props.cardId} cardName={this.props.cardName}/>
+        <div id="popupShim" className="popup-shim"
+          ref={(div) => {this.focusedElement = div}}
+          onKeyUp={(e) => {this.closeCardDetailsByKey(e)}}
+          tabIndex="-1">
+          <div className="cardDetails"
+            data-backdrop="static"
+            data-keyboard="false">
+              <div onClick={this.closeCardDetails}
+                className="exit-button"></div>
+              <h1>{this.props.cardName}</h1>
+              <h2>In column {this.props.columnName}</h2>
+              <p>Description TODO</p>
+              <CommentBlock cardId={this.props.cardId} cardName={this.props.cardName}/>
           </div>
         </div>
       );
   }
 
-  removeCard(cardId) {
+  removeCard = (cardId) => {
     var cardArr, commentArr, newCardArr, newCommentArr;
         cardArr = getData('card');
         newCardArr = cardArr.filter((e, i) => {return (!(e.id === cardId))});
@@ -61,7 +76,7 @@ class Card extends React.Component {
     }
   }
 
-  renderCard(){
+  renderCard = () => {
     var updateCard = this.props.updateCard;
     return (
       <div>

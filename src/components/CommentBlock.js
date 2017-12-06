@@ -24,38 +24,27 @@ class CommentBlock extends React.Component {
       commentButton: true,
       commentTitle: ''
     }
-    this.handleChangeEvent = this.handleChangeEvent.bind(this);
-    this.handleCommentTitle = this.handleCommentTitle.bind(this);
-    this.edit = this.edit.bind(this);
-    this.save = this.save.bind(this);
-    this.remove = this.remove.bind(this);
-    this.editComment = this.editComment.bind(this);
-    this.saveComment = this.saveComment.bind(this);
-    this.renderCommentList = this.renderCommentList.bind(this);
-    this.setState = this.setState.bind(this);
   }
 
-  handleChangeEvent(e) {
+  handleChangeEvent = (e) => {
     (e.target.value) ? this.setState({buttonIsActive: true}) : this.setState({buttonIsActive: false});
     this.setState({commentName: e.target.value});
   }
 
-  handleCommentTitle(e) {
-    console.log(e.target.value);
-    console.log(this.state.commentButton);
+  handleCommentTitle = (e) => {
     (e.target.value === '') ? this.setState({commentButton: true}) : this.setState({commentButton: false});
     console.log(this.state.commentButton);
     this.setState({commentTitle: e.target.value});
   }
 
-  edit(index){
+  edit = (index) => {
     var arr = this.state.commentData;
     arr[index].description = this.state.commentContent;
     setData('comment', arr);
     this.setState({commentData: getData('comment')});
   }
 
-  save(){
+  save = () =>{
     var username, commentName, arr, newArr;
         username = this.state.username;
         commentName = this.state.commentName;
@@ -65,20 +54,20 @@ class CommentBlock extends React.Component {
     this.setState({commentData: getData('comment'), commentName: ''});
   }
 
-  remove(index){
+  remove = (index) => {
     var arr = this.state.commentData;
     arr.splice(index, 1);
     setData('comment', arr);
     this.setState({commentData: getData('comment')});
   }
 
-  editComment(index, content) {
+  editComment = (index, content) => {
     var arr = this.state.commentData;
     arr[index].editMode = true;
     this.setState({commentData : arr, commentTitle: content});
   }
 
-  saveComment(index) {
+  saveComment = (index) => {
     var arr = this.state.commentData;
     arr[index].description = this.state.commentTitle;
     arr[index].editMode = false;
@@ -86,7 +75,7 @@ class CommentBlock extends React.Component {
     this.setState({commentData: getData('comment'), commentTitle: ''});
   }
 
-  renderCommentList() {
+  renderCommentList = () => {
     const {cardId} = this.props;
     const {commentData, username, commentTitle, commentButton} = this.state;
     var remove, edit, handleEvent, save;

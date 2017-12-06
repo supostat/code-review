@@ -86,10 +86,33 @@ h1{
 	margin: 10px 2px;
 	cursor: pointer;
 	background: rgba(193, 229, 114, .5);
+	position: relative;
 }
-.column h1 {
-	margin: 10px 0 0 10px;
+.column-title-container {
+	margin-left: 10px;
+	margin-top: 10px;
+	height: 45px;
+}
+.column-title {
+	min-height: 20px;
 	font-size: 18px !important;
+}
+.input-column-title {
+	width: 218px;
+	font-size: 18px;
+	border-radius: 3px;
+	margin-top: 3px;
+}
+.lock-window {
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	overflow: auto;
+	background: rgba(0, 0, 0, .6);
+}
+.card-container {
+	margin: 0 0 0 0;
 }
 .card {
 	width: 170px;
@@ -100,13 +123,14 @@ h1{
 	cursor: pointer;
 }
 .card h1{
+	margin-top: 0;
 	padding: 10px 0 0 6px;
 }
 .add-card {
-	margin: 12px 0 15px 45px !important;
+	margin: 12px 0 15px 72px !important;
 }
 .add-card-area {
-	margin: 20px 0 0 27px;
+	margin: 0 0 0 27px;
 }
 
 .add-card-container{
