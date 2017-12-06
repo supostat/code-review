@@ -36,7 +36,6 @@ class App extends React.Component {
   }
 
   handleChangeEvent = (e) => {
-    console.log("Set State function");
     this.setState({username: e.target.value});
   }
 

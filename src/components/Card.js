@@ -15,7 +15,10 @@ class Card extends React.Component {
     super(props);
     this.state = {
       isOpen: false,
-      cardData: getData('card')
+      isEditCardTitle: false,
+      isEditCardDescription: false,
+      cardData: getData('card'),
+      cardName: ''
     }
   }
 
@@ -24,8 +27,12 @@ class Card extends React.Component {
   }
 
   closeCardDetailsByKey = (e) => {
-    if(e.keyCode === 27)
+    var inputCardTitle = document.getElementById('input-card-title');
+    if(!inputCardTitle && e.keyCode === 27){
       this.setState({isOpen: false});
+    }else if(inputCardTitle && (e.keyCode === 27 || e.keyCode === 13)){
+      this.props.updateCard(this.setCardTitle, this.props.cardId);
+    }
   }
 
   openCardDetails = (event) => {
@@ -35,8 +42,70 @@ class Card extends React.Component {
   }
 
   componentDidUpdate = () => {
+    var inputCardTitle = document.getElementById('input-card-title');
     var focusContainer = document.getElementById('popupShim');
-    if(focusContainer) focusContainer.focus();
+    if(!inputCardTitle && focusContainer) focusContainer.focus();
+  }
+
+  setEditCardTitle = () => {
+    this.setState({isEditCardTitle: true, cardName: this.props.cardName});
+  }
+
+  setCardTitle = () => {
+    var arr, newArr, cardId;
+    cardId = this.props.cardId;
+    arr = getData('card');
+    newArr = arr.map((e, i) => {
+      if(e.id === cardId){
+        e.name = this.state.cardName;
+        return e;
+      }else{
+        return e;
+      }
+    });
+    setData('card', newArr);
+    this.setState({isEditCardTitle: false});
+  }
+
+  handleChangeEvent = (e) => {
+    this.setState({cardName: e.target.value});
+  }
+
+  setSelectionInEnd = (e) => {
+    console.log('Selection function is invoked');
+    e.target.setSelectionRange(e.target.value.length, e.target.value.length);
+  }
+
+  renderCardTitle = () => {
+    if(this.state.isEditCardTitle){
+      return (
+        <input type="text"
+          id="input-card-title"
+          className="input"
+          autoFocus="true"
+          value={this.state.cardName}
+          onChange={this.handleChangeEvent}
+          onFocus={this.setSelectionInEnd.bind(this)}
+          onBlur={(e) => {this.props.updateCard(this.setCardTitle, this.props.cardId)}}
+          />
+      );
+    }else{
+      return (
+        <h1 id="normal-card-title" onClick={this.setEditCardTitle}>{this.props.cardName}</h1>
+      );
+    }
+  }
+
+  renderCardDescription = () => {
+    if(this.state.isEditCardDescription){
+      return (
+        <div>TODO</div>
+      );
+    }else{
+      return(
+        <div>TODO</div>
+      );
+    }
   }
 
   renderCardDetails = () => {
@@ -49,26 +118,13 @@ class Card extends React.Component {
             data-keyboard="false">
               <div onClick={this.closeCardDetails}
                 className="exit-button"></div>
-              <h1>{this.props.cardName}</h1>
+              {this.renderCardTitle()}
               <h2>In column {this.props.columnName}</h2>
-              <p>Description TODO</p>
+              {this.renderCardDescription()}
               <CommentBlock cardId={this.props.cardId} cardName={this.props.cardName}/>
           </div>
         </div>
       );
-  }
-
-  removeCard = (cardId) => {
-    var cardArr, commentArr, newCardArr, newCommentArr;
-        cardArr = getData('card');
-        newCardArr = cardArr.filter((e, i) => {return (!(e.id === cardId))});
-        cardId = this.props.cardId;
-        commentArr = getData('comment') || [];
-    setData('card', newCardArr);
-    if(commentArr.length !== 0) {
-      newCommentArr = commentArr.filter((e, i) => {return (!(e.cardId === cardId))});
-      setData('comment', newCommentArr);
-    }
   }
 
   renderCard = () => {
@@ -85,6 +141,19 @@ class Card extends React.Component {
         {(!this.state.isOpen) ? null : this.renderCardDetails()}
       </div>
     );
+  }
+
+  removeCard = (cardId) => {
+    var cardArr, commentArr, newCardArr, newCommentArr;
+        cardArr = getData('card');
+        newCardArr = cardArr.filter((e, i) => {return (!(e.id === cardId))});
+        cardId = this.props.cardId;
+        commentArr = getData('comment') || [];
+    setData('card', newCardArr);
+    if(commentArr.length !== 0) {
+      newCommentArr = commentArr.filter((e, i) => {return (!(e.cardId === cardId))});
+      setData('comment', newCommentArr);
+    }
   }
 
   render() {
