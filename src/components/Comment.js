@@ -7,8 +7,8 @@ class Comment extends React.Component {
           <h1>{this.props.username}</h1>
           <p>{this.props.description}</p>
           <div className="comment-action">
-            <a href="#" onClick={this.props.editFn}>Изменить</a>
-            <a href="#" onClick={this.props.removeFn}>Удалить</a>
+            <a href="#" onClick={this.props.editFn}>Edit</a>
+            <a href="#" onClick={this.props.removeFn}>Remove</a>
           </div>
         </li>
       );

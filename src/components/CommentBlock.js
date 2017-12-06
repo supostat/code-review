@@ -33,7 +33,6 @@ class CommentBlock extends React.Component {
 
   handleCommentTitle = (e) => {
     (e.target.value === '') ? this.setState({commentButton: true}) : this.setState({commentButton: false});
-    console.log(this.state.commentButton);
     this.setState({commentTitle: e.target.value});
   }
 

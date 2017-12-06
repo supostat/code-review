@@ -1,6 +1,5 @@
 import React from 'react';
 import CommentBlock from './CommentBlock';
-import ReactDOM from 'react-dom'
 
   const getData = (dataName) =>
     JSON.parse(localStorage.getItem(dataName));
@@ -18,9 +17,6 @@ class Card extends React.Component {
       isOpen: false,
       cardData: getData('card')
     }
-    this.refs = {
-      focusedElement: null
-    }
   }
 
   closeCardDetails = () => {
@@ -28,7 +24,6 @@ class Card extends React.Component {
   }
 
   closeCardDetailsByKey = (e) => {
-    console.log("Close By Key is invoked");
     if(e.keyCode === 27)
       this.setState({isOpen: false});
   }
@@ -39,16 +34,16 @@ class Card extends React.Component {
     }
   }
 
-  focus = () => {
-    this.focusedElement.focus();
+  componentDidUpdate = () => {
+    var focusContainer = document.getElementById('popupShim');
+    if(focusContainer) focusContainer.focus();
   }
 
   renderCardDetails = () => {
       return (
         <div id="popupShim" className="popup-shim"
-          ref={(div) => {this.focusedElement = div}}
           onKeyUp={(e) => {this.closeCardDetailsByKey(e)}}
-          tabIndex="-1">
+          tabIndex="0">
           <div className="cardDetails"
             data-backdrop="static"
             data-keyboard="false">
