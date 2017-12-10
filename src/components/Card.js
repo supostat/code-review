@@ -2,7 +2,7 @@ import React from 'react';
 import CommentBlock from './CommentBlock';
 
 import { connect } from 'react-redux';
-import { removeCard, editCardName } from '../actions/card';
+import { removeCard, editCardName, editCardDescription } from '../actions/card';
 
 class Card extends React.Component {
   constructor(props) {
@@ -25,12 +25,12 @@ class Card extends React.Component {
     var inputCardDescription = document.getElementById('input-card-description');
     if(inputCardDescription === document.activeElement){
       if(e.keyCode === 27 || e.keyCode === 13)
-        return this.props.updateCard(this.setCardDescription, this.props.cardId); //TODO
+        this.setCardDescription(this.props.cardId);
     }
-    if(!inputCardTitle && e.keyCode === 27){
+    if(!inputCardTitle && !inputCardDescription && e.keyCode === 27){
       this.setState({isOpen: false});
     }else if(inputCardTitle && (e.keyCode === 27 || e.keyCode === 13)){
-      this.props.updateCard(this.setCardTitle, this.props.cardId);
+      this.setCardTitle(this.props.cardId);
     }
   }
 
@@ -68,22 +68,11 @@ class Card extends React.Component {
     this.props.dispatch(editCardName(cardId, this.state.cardName.trim()));
     this.setState({isEditCardTitle: false});
   }
-  /*
-  setCardDescription = () => {
-    var arr, newArr, cardId;
-    cardId = this.props.cardId;
-    arr = getData('card');
-    newArr = arr.map((e, i) => {
-      if(e.id === cardId){
-        e.description = this.state.description.trim();
-        return e;
-      }else{
-        return e;
-      }
-    });
-    setData('card', newArr);
+
+  setCardDescription = (cardId) => {
+    this.props.dispatch(editCardDescription(cardId, this.state.description.trim()));
     this.setState({isEditCardDescription: false});
-  }*/
+  }
 
   handleChangeEvent = (e) => {
     this.setState({cardName: e.target.value});
@@ -95,6 +84,10 @@ class Card extends React.Component {
 
   setSelectionInEnd = (e) => {
     e.target.setSelectionRange(e.target.value.length, e.target.value.length);
+  }
+
+  removeCard = (cardId) => {
+    this.props.dispatch(removeCard(cardId)); //TODO remove comment with cardId
   }
 
   renderCardTitle = () => {
@@ -125,7 +118,7 @@ class Card extends React.Component {
             onChange={this.handleChangeDescription}
             value={this.state.description}></textarea>
           <button className="btn btn-primary"
-            onClick={() => {return this.props.updateCard(this.setCardDescription, this.props.cardId)}}>Save</button>
+            onClick={() => {this.setCardDescription(this.props.cardId)}}>Save</button>
           <div className="exit-button"
                id="exit-button-description"
             onClick={this.setRegularCardDescription}></div>
@@ -137,7 +130,7 @@ class Card extends React.Component {
           <a href="#"
             id="card-description-link"
             onClick={this.setEditCardDescription}>Change description...</a>
-          <p className="card-regular-description">{this.props.cardDescription}</p>
+          <p className="card-regular-description" onClick={this.setEditCardDescription}>{this.props.cardDescription}</p>
         </div>
       );
     }
@@ -177,18 +170,13 @@ class Card extends React.Component {
     );
   }
 
-  removeCard = (cardId) => {
-    this.props.dispatch(removeCard(cardId)); //TODO remove comment with cardId
-  }
-
   render() {
     return this.renderCard();
   }
 }
 
 const mapStateToProps = (store) => ({
-  cardState: store.cardState,
-  commentState: store.commentState
+  cardState: store.cardState
 })
 
 export default connect(

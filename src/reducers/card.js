@@ -37,7 +37,7 @@ export default function card(state = initialState, action) {
 
     case C.EDIT_CARD_DESCRIPTION:
       newState = state.map((e, i) => {
-        if(e.description === action.description){
+        if(e.id === action.id){
           e.description = action.description;
           return e;
         }else{
