@@ -29,7 +29,15 @@ export default function column(state = initialState, action) {
       ]
 
     case C.EDIT_COLUMN_TITLE:
-      return state
+      const newState = state.map((e, i) => {
+        if(e.id === action.id){
+          e.name = action.name;
+          return e;
+        }else{
+          return e;
+        }
+      });
+      return newState
 
     default:
       return state

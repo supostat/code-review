@@ -6,10 +6,10 @@ export function addColumn() {
   };
 }
 
-export function editTitle(id, title){
+export function editTitle(id, name){
   return {
     type: C.EDIT_COLUMN_TITLE,
     id,
-    title
+    name
   };
 }

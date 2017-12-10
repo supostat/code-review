@@ -1,21 +1,13 @@
 import React from 'react';
 import Card from './Card';
 
-  const getData = (dataName) =>
-    JSON.parse(localStorage.getItem(dataName));
-
-  const setData = function (name, value) {
-    (typeof value === "object") ?
-      localStorage.setItem(name, JSON.stringify(value)) :
-      localStorage.setItem(name, value);
-  };
+import { connect } from 'react-redux';
+import { editTitle } from '../actions/column';
 
 class Column extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      columnData: getData('column'),
-      cardData: getData('card'),
       isEditCard: false,
       isEditTitle: false,
       cardName: '',
@@ -46,26 +38,16 @@ class Column extends React.Component{
   }
 
   setColumnTitle = () => {
-    var columnName, arr, newArr;
-    columnName = (this.state.columnName === '') ? "" : this.state.columnName;
-    arr = getData('column');
-      newArr = arr.map((e, i) => {
-        if(this.props.index === i){
-          e.name = columnName;
-          return e;
-        }else{
-          return e;
-        }
-      });
-      setData('column', newArr);
-      this.setState({isEditTitle: false, columnData: getData('column')});
+    var columnName = (this.state.columnName === '') ? "" : this.state.columnName;
+    this.props.dispatch(editTitle(this.props.columnId, columnName));
+    this.setState({isEditTitle: false});
   }
 
   edit = () => {
     this.setState({isEditCard: true});
   }
 
-  save = () => {
+  /*save = () => {
     var newArr, columnId, arr, id;
     columnId = this.props.columnId;
     arr = getData('card') || [];
@@ -77,13 +59,15 @@ class Column extends React.Component{
       }else{
         this.setState({isEditCard: false});
       }
-    }
+    }*/
 
+  /*
   editColumnTitle = (index) => {
     var arr = getData('column');
     arr[index].editMode = true;
     this.setState({columnData: getData('column')});
   }
+  */
 
   renderEdit = () => {
     return (
@@ -106,10 +90,11 @@ class Column extends React.Component{
     );
   }
 
+  /*
   updateCard = (cardFn, cardId) => {
     cardFn(cardId);
     this.setState({cardData: getData('card')});
-  }
+  }*/
 
   setSelectionInEnd = (e) => {
     e.target.setSelectionRange(e.target.value.length, e.target.value.length);
@@ -123,13 +108,12 @@ class Column extends React.Component{
     }else{
       return(
         <input type="text"
-              ref="inputColumnTitle"
               className="input-column-title input"
               autoFocus="true"
               value={this.state.columnName}
-              onKeyDown={(e) => {this.props.updateColumnTitle(this.handleKeyPress, e)}}
+              onKeyDown={(e) => { this.handleKeyPress(e)}}
               onFocus={this.setSelectionInEnd.bind(this)}
-              onBlur={(e) =>{this.props.updateColumnTitle(this.handleClickColumnTitle, e)}}
+              onBlur={(e) =>{this.handleClickColumnTitle(e)}}
               onChange={this.handleColumnTitle}/>
       );
     }
@@ -166,4 +150,11 @@ class Column extends React.Component{
   }
 }
 
-export default Column;
+const mapStateToProps = (store) => ({
+  columnState: store.columnState,
+  cardState: store.cardState
+})
+
+export default connect(
+  mapStateToProps
+  )(Column);

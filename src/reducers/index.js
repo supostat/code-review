@@ -7,7 +7,8 @@ import column from './column';
 const allReducers = combineReducers({
   userState: user,
   boardState: board,
-  columnState: column
+  columnState: column,
+  columnEditMode: []
 });
 
 export default allReducers;

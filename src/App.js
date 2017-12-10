@@ -12,7 +12,6 @@ class App extends React.Component {
     super(props);
     this.state = {
       username: '',
-      columnTitleIsEdit: false,
       buttonIsActive: false
     }
   }
@@ -39,7 +38,7 @@ class App extends React.Component {
           </div>
           <div className="second-screen col-xs-9 col-sm-9 col-md-9 col-lg-9">
             {columnData.map((e, i) => {
-              return (<Column columnName={e.name} key={i} columnId={e.id} index={i} updateColumnTitle={this.updateColumnTitle}/>);
+              return (<Column columnName={e.name} key={i} columnId={e.id} index={i}/>);
             })}
           </div>
         </div>
