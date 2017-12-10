@@ -2,35 +2,16 @@ import React from 'react';
 import Board from './components/Board';
 import Column from './components/Column';
 
-  const getUsername = () => 
-    localStorage.getItem('username');
-
-  const getData = (dataName) =>
-    JSON.parse(localStorage.getItem(dataName));
-
-  const setData = function (name, value) {
-    (typeof value === "object") ?
-      localStorage.setItem(name, JSON.stringify(value)) :
-      localStorage.setItem(name, value);
-  };
-
-  const setDefaultDashboardAndColumn = function () {
-    localStorage.setItem('board', JSON.stringify([{id: 1, name: 'Welcome Board'}]));
-    localStorage.setItem('column', JSON.stringify([
-      {id: 1, boardId: 1, name: 'TODO', editMode: false},
-      {id: 2, boardId: 1, name: 'In Progress', editMode: false},
-      {id: 3, boardId: 1, name: 'Testing', editMode: false},
-      {id: 4, boardId: 1, name: 'Done', editMode: false}
-    ]));
-  };
+import { connect } from 'react-redux';
+import addUser from './actions/user';
+import { addBoard } from './actions/board';
+import { addColumn } from './actions/column';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: getUsername(),
-      columnData: getData('column'),
-      cardData: getData('card'),
+      username: '',
       columnTitleIsEdit: false,
       buttonIsActive: false
     }
@@ -41,20 +22,16 @@ class App extends React.Component {
     this.setState({username: e.target.value});
   }
 
-  add = () => {
-    setData('username', this.state.username);
-    setDefaultDashboardAndColumn();
-    this.setState({username: getUsername(), columnData: getData('column')});
-  }
-
-  updateColumnTitle = (callBack, e) => {
-    callBack(e);
-    this.setState({columnData: getData('column')});
+  add = (username) => {
+    this.props.dispatch(addUser(username));
+    this.props.dispatch(addBoard());
+    this.props.dispatch(addColumn());
   }
 
   requestUsername = () => {
-    var columnData = this.state.columnData;
-    if (columnData) {
+    const columnData = this.props.columnState;
+    const username = this.props.userState;
+    if (username.length !== 0) {
       return (
         <div className="container-fluid">
           <div className="first-screen col-xs-3 col-sm-3 col-md-3 col-lg-3">
@@ -73,7 +50,7 @@ class App extends React.Component {
           <form className="name-form" onSubmit={(e) => {e.preventDefault()}}>
             <p>Please input your username:</p> <input className="input-name-field" type="text" onChange={this.handleChangeEvent} />
             <br/>
-            <input type="submit" value="Save" onClick={this.add} disabled={!this.state.buttonIsActive} className="btn btn-info name-submit-button" />
+            <input type="submit" value="Save" onClick={(e) => {this.add(this.state.username)}} disabled={!this.state.buttonIsActive} className="btn btn-info name-submit-button" />
             </form>
           </div>
         );
@@ -85,4 +62,11 @@ class App extends React.Component {
   }
 }
 
-export default App;
+const mapStateToProps = (store) => ({
+  userState: store.userState,
+  columnState: store.columnState
+})
+
+export default connect(
+  mapStateToProps
+)(App);

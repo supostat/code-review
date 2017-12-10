@@ -1,27 +1,23 @@
 import React from 'react';
 
-  const getUsername = () => 
-    localStorage.getItem('username');
-
-  const getData = (dataName) =>
-    JSON.parse(localStorage.getItem(dataName));
+import { connect } from 'react-redux';
 
 class Board extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      board: getData('board'),
-      username: getUsername()
-    }
-  }
 
   render() {
+
     return (
       <div className="board">
-        <h1>{this.state.board[0].name}</h1>
+        <h1>{!(this.props.boardState.length === 0) ? this.props.boardState[0].name : null}</h1>
       </div>
     );
   }
 }
 
-export default Board
+const mapStateToProps = (store) => ({
+  boardState: store.boardState
+})
+
+export default connect(
+  mapStateToProps
+)(Board);
