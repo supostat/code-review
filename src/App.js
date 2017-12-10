@@ -47,7 +47,7 @@ class App extends React.Component {
       return (
         <div className="popup-shim">
           <form className="name-form" onSubmit={(e) => {e.preventDefault()}}>
-            <p>Please input your username:</p> <input className="input-name-field" type="text" onChange={this.handleChangeEvent} />
+            <p>Please type your username:</p> <input className="input-name-field" type="text" onChange={this.handleChangeEvent} />
             <br/>
             <input type="submit" value="Save" onClick={(e) => {this.add(this.state.username)}} disabled={!this.state.buttonIsActive} className="btn btn-info name-submit-button" />
             </form>

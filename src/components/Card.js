@@ -1,14 +1,8 @@
 import React from 'react';
 import CommentBlock from './CommentBlock';
 
-  const getData = (dataName) =>
-    JSON.parse(localStorage.getItem(dataName));
-
-  const setData = function (name, value) {
-    (typeof value === "object") ?
-      localStorage.setItem(name, JSON.stringify(value)) :
-      localStorage.setItem(name, value);
-  };
+import { connect } from 'react-redux';
+import { removeCard, editCardName } from '../actions/card';
 
 class Card extends React.Component {
   constructor(props) {
@@ -17,7 +11,6 @@ class Card extends React.Component {
       isOpen: false,
       isEditCardTitle: false,
       isEditCardDescription: false,
-      cardData: getData('card'),
       cardName: '',
       description: ''
     }
@@ -32,7 +25,7 @@ class Card extends React.Component {
     var inputCardDescription = document.getElementById('input-card-description');
     if(inputCardDescription === document.activeElement){
       if(e.keyCode === 27 || e.keyCode === 13)
-        return this.props.updateCard(this.setCardDescription, this.props.cardId);
+        return this.props.updateCard(this.setCardDescription, this.props.cardId); //TODO
     }
     if(!inputCardTitle && e.keyCode === 27){
       this.setState({isOpen: false});
@@ -71,22 +64,11 @@ class Card extends React.Component {
     this.setState({isEditCardDescription: false});
   }
 
-  setCardTitle = () => {
-    var arr, newArr, cardId;
-    cardId = this.props.cardId;
-    arr = getData('card');
-    newArr = arr.map((e, i) => {
-      if(e.id === cardId){
-        e.name = this.state.cardName.trim();
-        return e;
-      }else{
-        return e;
-      }
-    });
-    setData('card', newArr);
+  setCardTitle = (cardId) => {
+    this.props.dispatch(editCardName(cardId, this.state.cardName.trim()));
     this.setState({isEditCardTitle: false});
   }
-
+  /*
   setCardDescription = () => {
     var arr, newArr, cardId;
     cardId = this.props.cardId;
@@ -101,7 +83,7 @@ class Card extends React.Component {
     });
     setData('card', newArr);
     this.setState({isEditCardDescription: false});
-  }
+  }*/
 
   handleChangeEvent = (e) => {
     this.setState({cardName: e.target.value});
@@ -125,7 +107,7 @@ class Card extends React.Component {
           value={this.state.cardName}
           onChange={this.handleChangeEvent}
           onFocus={this.setSelectionInEnd.bind(this)}
-          onBlur={(e) => {this.props.updateCard(this.setCardTitle, this.props.cardId)}}
+          onBlur={(e) => {this.setCardTitle(this.props.cardId)}}
           />
       );
     }else{
@@ -181,13 +163,12 @@ class Card extends React.Component {
   }
 
   renderCard = () => {
-    var updateCard = this.props.updateCard;
     return (
       <div>
         <div className='card' onClick={(e) => {this.openCardDetails(e)}}>
           <div 
             className='card-delete-button'
-            onClick={() => {return updateCard(this.removeCard, this.props.cardId)}}>
+            onClick={() => {this.removeCard(this.props.cardId)}}>
           </div>
           <h1>{this.props.cardName}</h1>
         </div>
@@ -197,16 +178,7 @@ class Card extends React.Component {
   }
 
   removeCard = (cardId) => {
-    var cardArr, commentArr, newCardArr, newCommentArr;
-        cardArr = getData('card');
-        newCardArr = cardArr.filter((e, i) => {return (!(e.id === cardId))});
-        cardId = this.props.cardId;
-        commentArr = getData('comment') || [];
-    setData('card', newCardArr);
-    if(commentArr.length !== 0) {
-      newCommentArr = commentArr.filter((e, i) => {return (!(e.cardId === cardId))});
-      setData('comment', newCommentArr);
-    }
+    this.props.dispatch(removeCard(cardId)); //TODO remove comment with cardId
   }
 
   render() {
@@ -214,4 +186,11 @@ class Card extends React.Component {
   }
 }
 
-export default Card;
+const mapStateToProps = (store) => ({
+  cardState: store.cardState,
+  commentState: store.commentState
+})
+
+export default connect(
+  mapStateToProps
+  )(Card);
