@@ -9,8 +9,14 @@ import reducer from './reducers';
 
 const store = createStore(
                            reducer,
-                           window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+                           (localStorage['redux-store']) ?
+                             JSON.parse(localStorage['redux-store']) :
+                             {}
                          );
+
+store.subscribe(() => {
+  localStorage['redux-store'] = JSON.stringify(store.getState())
+});
 
 ReactDOM.render(
   <Provider store={store}>

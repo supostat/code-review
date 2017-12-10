@@ -1,29 +1,15 @@
 import React from 'react';
 import Comment from './Comment';
 
-  const getUsername = () => 
-    localStorage.getItem('username');
-
-  const getData = (dataName) =>
-    JSON.parse(localStorage.getItem(dataName));
-
-  const setData = function (name, value) {
-    (typeof value === "object") ?
-      localStorage.setItem(name, JSON.stringify(value)) :
-      localStorage.setItem(name, value);
-  };
+import { connect } from 'react-redux';
+import { addComment } from '../actions/comment';
 
 class CommentBlock extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      username: getUsername(),
-      commentData: getData('comment'),
       commentName: '',
       buttonIsActive: false,
-      commentButton: true,
-      commentEditButton: false,
-      commentTitle: ''
     }
   }
 
@@ -32,91 +18,13 @@ class CommentBlock extends React.Component {
     this.setState({commentName: e.target.value});
   }
 
-  handleCommentTitle = (e) => {
-    (e.target.value === '') ? this.setState({commentEditButton: true}) : this.setState({commentEditButton: false});
-    this.setState({commentTitle: e.target.value});
-  }
-
-  edit = (index) => {
-    var arr = this.state.commentData;
-    arr[index].description = this.state.commentContent.trim();
-    setData('comment', arr);
-    this.setState({commentData: getData('comment')});
-  }
-
-  save = () => {
-    var username, commentName, arr, newArr;
-        username = this.state.username;
-        commentName = this.state.commentName;
-        arr = this.state.commentData || [];
-        newArr = arr.concat({id: arr.length+1, cardId: this.props.cardId, author: username, description: commentName, editMode: false});
-    setData('comment', newArr);
-    this.setState({commentData: getData('comment'), commentName: '', buttonIsActive: !this.state.buttonIsActive});
-  }
-
-  remove = (index) => {
-    var arr = this.state.commentData;
-    arr.splice(index, 1);
-    setData('comment', arr);
-    this.setState({commentData: getData('comment')});
-  }
-
-  editComment = (index, content) => {
-    var arr = this.state.commentData;
-    arr[index].editMode = true;
-    this.setState({commentData : arr, commentTitle: content});
-  }
-
-  saveComment = (index) => {
-    var arr = this.state.commentData;
-    arr[index].description = this.state.commentTitle;
-    arr[index].editMode = false;
-    setData('comment', arr);
-    this.setState({commentData: getData('comment'), commentTitle: ''});
-    document.getElementById('popupShim').focus();
-  }
-
-  renderCommentList = () => {
-    const {cardId} = this.props;
-    const {commentData, username, commentTitle, commentEditButton} = this.state;
-    var remove, edit, handleEvent, save;
-    remove = this.remove;
-    edit = this.editComment;
-    handleEvent = this.handleCommentTitle;
-    save = this.saveComment;
-
-    return (!commentData) ? null : commentData.map(function(e, i) {
-      if(cardId === e.cardId){
-        if(!e.editMode){
-          return <Comment
-                  key={i}
-                  username={username}
-                  index={i} description={e.description} 
-                  commentId={e.id}
-                  removeFn={() => {return remove(i)}}
-                  editFn={() => {return edit(i, e.description)}} />
-        }else{
-          return (<li key={i}>
-                    <h1>{username}</h1>
-                    <textarea
-                      className="textarea edit-comment"
-                      value={commentTitle}
-                      onChange={handleEvent}>
-                    </textarea>
-                    <br/>
-                    <button
-                      className="btn btn-info btn-edit-comment"
-                      disabled={commentEditButton}
-                      onClick={() => {return save(i)}}>Save</button>
-                  </li>);
-        }
-      }else{
-        return null;
-      }
-    });
+  save = (cardId, commentName) => {
+    this.props.dispatch(addComment(cardId, commentName));
+    this.setState({commentName: '', buttonIsActive: !this.state.buttonIsActive});
   }
 
   render() {
+    const cardId = this.props.cardId;
     return (
       <div className="comment">
         <h1>Add Comment</h1>
@@ -129,14 +37,29 @@ class CommentBlock extends React.Component {
         <br/>
         <button
           disabled={!this.state.buttonIsActive}
-          onClick={this.save}
+          onClick={() => {this.save(cardId, this.state.commentName)}}
           className="btn btn-success add-comment-btn">Save</button>
         <ul className="comment-list">
-          {this.renderCommentList()}
+          {this.props.commentState.map((e, i) => {
+            if(e.cardId === cardId) {
+              return <Comment key={i}
+                        editMode={e.editMode}
+                        description={e.name}
+                        commentId={e.id}/>
+            }else{
+              return null
+            }
+          })}
         </ul>
       </div>
     );
   }
 }
 
-export default CommentBlock;
+const mapStateToProps = (store) => ({
+  commentState: store.commentState
+})
+
+export default connect(
+  mapStateToProps
+  )(CommentBlock);

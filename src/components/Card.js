@@ -3,6 +3,7 @@ import CommentBlock from './CommentBlock';
 
 import { connect } from 'react-redux';
 import { removeCard, editCardName, editCardDescription } from '../actions/card';
+import { removeCommentByCardId, resetCommentEditMode } from '../actions/comment';
 
 class Card extends React.Component {
   constructor(props) {
@@ -18,16 +19,19 @@ class Card extends React.Component {
 
   closeCardDetails = () => {
     this.setState({isOpen: false});
+    this.props.dispatch(resetCommentEditMode());
   }
 
   closeCardDetailsByKey = (e) => {
     var inputCardTitle = document.getElementById('input-card-title');
     var inputCardDescription = document.getElementById('input-card-description');
+
     if(inputCardDescription === document.activeElement){
       if(e.keyCode === 27 || e.keyCode === 13)
         this.setCardDescription(this.props.cardId);
     }
     if(!inputCardTitle && !inputCardDescription && e.keyCode === 27){
+      this.props.dispatch(resetCommentEditMode());
       this.setState({isOpen: false});
     }else if(inputCardTitle && (e.keyCode === 27 || e.keyCode === 13)){
       this.setCardTitle(this.props.cardId);
@@ -87,7 +91,8 @@ class Card extends React.Component {
   }
 
   removeCard = (cardId) => {
-    this.props.dispatch(removeCard(cardId)); //TODO remove comment with cardId
+    this.props.dispatch(removeCard(cardId));
+    this.props.dispatch(removeCommentByCardId(cardId));
   }
 
   renderCardTitle = () => {
@@ -176,7 +181,8 @@ class Card extends React.Component {
 }
 
 const mapStateToProps = (store) => ({
-  cardState: store.cardState
+  cardState: store.cardState,
+  commentState: store.commentState
 })
 
 export default connect(
