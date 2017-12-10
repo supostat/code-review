@@ -3,6 +3,7 @@ import Card from './Card';
 
 import { connect } from 'react-redux';
 import { editTitle } from '../actions/column';
+import { addCard } from '../actions/card';
 
 class Column extends React.Component{
   constructor(props){
@@ -47,27 +48,15 @@ class Column extends React.Component{
     this.setState({isEditCard: true});
   }
 
-  /*save = () => {
-    var newArr, columnId, arr, id;
-    columnId = this.props.columnId;
-    arr = getData('card') || [];
-    id = (arr.length > 0) ? (arr[arr.length - 1].id + 1) : 1;
+  save = () => {
+    var columnId = this.props.columnId;
       if(this.state.cardName.trim() !== ""){
-        newArr = arr.concat({id: id, columnId: columnId, name: this.state.cardName.trim(), description: ''});
-        setData('card', newArr);
-        this.setState({cardData: getData('card'), isEditCard: false, cardName: ''});
+        this.props.dispatch(addCard(columnId, this.state.cardName.trim()));
+        this.setState({isEditCard: false, cardName: ''});
       }else{
         this.setState({isEditCard: false});
       }
-    }*/
-
-  /*
-  editColumnTitle = (index) => {
-    var arr = getData('column');
-    arr[index].editMode = true;
-    this.setState({columnData: getData('column')});
-  }
-  */
+    }
 
   renderEdit = () => {
     return (
@@ -89,12 +78,6 @@ class Column extends React.Component{
       <a href="#" onClick={this.edit} className="btn btn-success add-card">Add Card</a>
     );
   }
-
-  /*
-  updateCard = (cardFn, cardId) => {
-    cardFn(cardId);
-    this.setState({cardData: getData('card')});
-  }*/
 
   setSelectionInEnd = (e) => {
     e.target.setSelectionRange(e.target.value.length, e.target.value.length);
@@ -129,15 +112,14 @@ class Column extends React.Component{
         </div>
         <div className="card-container">
         {
-          (!this.state.cardData) ? null : this.state.cardData.map((e, i) => {
+          (!this.props.cardState) ? null : this.props.cardState.map((e, i) => {
             return (e.columnId === this.props.columnId) ?
             <Card
               cardName={e.name}
               index={i} key={i}
               cardId={e.id}
               cardDescription={e.description}
-              columnName={this.props.columnName}
-              updateCard={this.updateCard}/> :
+              columnName={this.props.columnName} /> :
             null;
           })
         }
