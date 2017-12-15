@@ -164,7 +164,7 @@ class Card extends React.Component {
     return (
       <div>
         <div className='card' onClick={(e) => {this.openCardDetails(e)}}>
-          <div 
+          <div
             className='card-delete-button'
             onClick={() => {this.removeCard(this.props.cardId)}}>
           </div>
@@ -187,4 +187,4 @@ const mapStateToProps = (store) => ({
 
 export default connect(
   mapStateToProps
-  )(Card);
+)(Card);

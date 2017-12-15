@@ -28,10 +28,8 @@ export default function comment(state = initialState, action) {
       newState = state.map((e, i) => {
         if(e.id === action.id) {
           e.name = action.name;
-          return e;
-        }else{
-          return e;
         }
+        return e;
       })
       return newState;
 
@@ -40,7 +38,7 @@ export default function comment(state = initialState, action) {
         if(e.id === action.id) {
           e.editMode = !e.editMode;
           return e;
-        }else{
+        }else{ /// ??? UP
           return e;
         }
       })
@@ -59,7 +57,7 @@ export default function comment(state = initialState, action) {
 
     case C.REMOVE_COMMENT_BY_CARD_ID:
       newState = state.filter((e, i) => {
-        return !(e.cardId === action.cardId);
+        return e.cardId !== action.cardId;
       })
       return newState;
 

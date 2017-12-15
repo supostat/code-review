@@ -4,6 +4,32 @@ import Card from './Card';
 import { connect } from 'react-redux';
 import { editTitle } from '../actions/column';
 import { addCard } from '../actions/card';
+import column from '../reducers/column';
+
+
+// renderColumns(columns) {
+//   return columns.map((column, index) => {
+//     return (
+//       <Column column={column} key={index}>
+
+//       </Column>
+//     )
+//   })
+// };
+
+
+// columns = [];
+
+// <Board title="qweqwe">
+//   <Columns component={Column} columns={columns}>
+//     <Column>
+//       <Card>
+//         <Comment onSave={this.handleSave}>
+//       </Card>
+//     </Column>
+//   </Columns>
+//   {this.renderColumns(columns)}
+// </Board>
 
 class Column extends React.Component{
   constructor(props){
@@ -132,6 +158,8 @@ class Column extends React.Component{
   }
 }
 
+
+
 const mapStateToProps = (store) => ({
   columnState: store.columnState,
   cardState: store.cardState
@@ -139,4 +167,4 @@ const mapStateToProps = (store) => ({
 
 export default connect(
   mapStateToProps
-  )(Column);
+)(Column);

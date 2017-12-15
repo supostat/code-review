@@ -27,31 +27,38 @@ class App extends React.Component {
     this.props.dispatch(addColumn());
   }
 
+  renderColumns(columnData) {
+    return columnData.map((column, index) => {
+      return (<Column columnName={column.name} key={index} columnId={column.id} index={index}/>);
+    })
+  }
+
   requestUsername = () => {
-    const columnData = this.props.columnState;
-    const username = this.props.userState;
-    if (username.length !== 0) {
+    const {columnData, userData} = this.props;
+    if (userData.length !== 0) {
       return (
         <div className="container-fluid">
           <div className="first-screen col-xs-3 col-sm-3 col-md-3 col-lg-3">
-            <Board />
+            <Board title="Board title" />
           </div>
           <div className="second-screen col-xs-9 col-sm-9 col-md-9 col-lg-9">
-            {columnData.map((e, i) => {
-              return (<Column columnName={e.name} key={i} columnId={e.id} index={i}/>);
-            })}
+            {this.renderColumns(columnData)}
           </div>
         </div>
       );
-    }else {
+    } else {
       return (
         <div className="popup-shim">
-          <form className="name-form" onSubmit={(e) => {e.preventDefault()}}>
+          <form className="name-form">
             <p>Please type your username:</p> <input className="input-name-field" type="text" onChange={this.handleChangeEvent} />
             <br/>
-            <input type="submit" value="Save" onClick={(e) => {this.add(this.state.username)}} disabled={!this.state.buttonIsActive} className="btn btn-info name-submit-button" />
-            </form>
-          </div>
+            <button
+              onClick={() => this.add(this.state.username)}
+              disabled={!this.state.buttonIsActive}
+              className="btn btn-info name-submit-button"
+            >Save</button>
+          </form>
+        </div>
         );
     }
   }
@@ -62,8 +69,8 @@ class App extends React.Component {
 }
 
 const mapStateToProps = (store) => ({
-  userState: store.userState,
-  columnState: store.columnState
+  userData: store.userState,
+  columnData: store.columnState
 })
 
 export default connect(

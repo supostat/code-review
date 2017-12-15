@@ -66,7 +66,7 @@ class Comment extends React.Component {
              <button
                className="btn btn-info btn-edit-comment"
                disabled={commentEditButton}
-               onClick={() => { this.save(commentId, commentName)}}>Save</button>
+               onClick={() => this.save(commentId, commentName)}>Save</button>
              </li>
             );
     }
@@ -81,4 +81,4 @@ const mapStateToProps = (store) => ({
 
 export default connect(
   mapStateToProps
-  )(Comment);
+)(Comment);
